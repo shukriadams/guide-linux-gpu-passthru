@@ -6,9 +6,13 @@ This guides explains how to provision a Linux host machine with one or more Wind
 an existing bootable Windows or Linux disk into your host system and run it as a guest. These disks can be removed and run independently again, or even set to be the primary 
 boot disk on your host system via the BIOS. This gives you a great deal of flexibility for experimenting with virtualization and system consolidation without overcommitting.
 
+## A very brief history of hardware passhthrough
+
+If you tried running a Windows guest with GPU passthrough on Linux before, you will likely remember that it was a cumbersome and uncertain process, requiring lots tinkering on the host system, and then struggling with GPU drivers, particularly those from NVidia. Well, times have changed, and it is now easier than ever to get this to work reliably. The Linux kernel now has built-in support, and Nvidia have officially blessed driver use in VMs. 
+
 ## Distro
 
-This guide assumes you're running Ubuntu 20.04 host.
+This guide assumes you're running Ubuntu 20.04 as your host system. You will likely be able to use this guide on other recent Debian-based systems. Note that
 
 ## Hardware
 
@@ -168,3 +172,14 @@ Sometimes you need to remove a device and start again, try
 
     sudo nmcli connection delete <guid>
     
+## Experience
+
+I have run the above setup at work for a month, and here are my takeaways from it.
+- My Windows guest crashed twice in that month reporting hardware errors, once serious enough that I had to restart it from the host. Overall, I find the setup to be solid and reliable. 
+- My main Windows guest boots automatically when my host starts, which adds a good minute to my initial boot time, but after that Windows restarts are blazing fast. One of my biggest worries with this was that I'd constantly be in VFIO troubleshooting mode, but once I set this up, it just works. My Windows machine boots up automatically and reliably, and I can get on with regular work on it. 
+- I've remoted in frequently (daily) to my Windows guest while working from home.
+- Passed through USB devices perform as if native.
+- Having to manage USB devices is by far the most tedious part, but this happens only when swapping.
+- I use my host machine for active developing, and this sometimes means I have to reboot it, which means I have to reboot all guests too. Oh well.
+
+All in all, this technology has definitely reached a level of polish where I'm willing to use it full time for home and office. It hasn't impeded my productivity at all, and I've managed to condense 4 hardware boxes into one.
